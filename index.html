@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BitOS - Terminal XP</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+body {
+    margin: 0;
+    background-image: url('https://i.ibb.co/qF7c0krc/Blue-Illustration-Mountain-Desktop-Wallpaper.png'); /* Resminizin dosya adını buraya yazın */
+    background-size: cover; /* Resmi tüm ekranı kaplayacak şekilde ayarlar */
+    background-repeat: no-repeat; /* Resmin tekrar etmesini engeller */
+    color: #0f0;
+    margin: 0;
+    overflow: hidden;
+}
+   }
+
+        #trailerWindow {
+            width: 600px;
+            height: 400px;
+        }
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #003300;
+            color: #0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            font-size: 14px;
+            z-index: 9999;
+        
+        }
+
+        .start-button {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 5px 10px;
+            cursor: pointer;
+            z-index: 10002; /* Merhaba sayfasının üzerinde olsun */
+        }
+
+        .start-menu {
+            position: fixed;
+            bottom: 35px;
+            left: 5px;
+            background: #003300;
+            border: 2px solid #0f0;
+            display: none;
+            flex-direction: column;
+            z-index: 10001; /* Merhaba sayfasının üzerinde olsun */
+        }
+
+        .start-menu button {
+            background: #000;
+            color: #0f0;
+            border: none;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            width: 200px;
+        }
+
+        .bitos-window {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 500px;
+            height: 350px;
+            background: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            resize: both;
+            overflow: auto;
+            z-index: 1;
+            box-shadow: 0 0 10px #0f0;
+        }
+
+        .title-bar {
+            background: #0f0;
+            color: #000;
+            cursor: move;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-buttons button {
+            background: #000;
+            color: #0f0;
+            border: none;
+            width: 20px;
+            cursor: pointer;
+            margin-left: 2px;
+        }
+
+        .window-content {
+            padding: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 250px;
+            border: none;
+            background: #fff;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 25px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #0f0;
+            background-color: #000000;
+        }
+
+        @media (max-width: 600px) {
+            .start-menu button {
+                font-size: 12px;
+            }
+            .bitos-window {
+                width: 90vw;
+                height: 60vh;
+            }
+        }
+
+        /* Yılan Oyunu Stilleri */
+        #snakeGameWindow {
+            width: 320px;
+            height: 350px; /* canvas yüksekliği için biraz pay bırakıldı */
+        }
+
+        #snakeCanvas {
+            background-color: #222;
+            display: block;
+        }
+        html, body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Gerekirse */
+}
+
+        #merhabaSayfasi {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #003300;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 20px;
+            z-index: 10000;
+            text-align: center;
+        }
+
+        #merhabaSayfasi button {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="merhabaSayfasi">
+    <h2>Merhaba! BitOS Terminal XP'ye Hoş Geldiniz</h2>
+    <p>Bu proje, tarayıcı üzerinde basit bir terminal benzeri deneyim sunmayı amaçlamaktadır.</p>
+    <p>İçerisinde farklı uygulamalar bulunmaktadır:</p>
+    <ul>
+        <li>🌐 İnternet Tarayıcı (basit bir arama ve iframe görüntüleyici)</li>
+        <li>🧮 Hesap Makinesi (temel işlemler)</li>
+        <li>📄 Metin Editörü (basit metin düzenleme)</li>
+        <li>🐍 Yılan Oyunu (Web Basel'den nostaljik bir yılan oyunu)</li>
+        <li>🎭 Shakespeare Sözleri (rastgele Shakespeare alıntıları)</li>
+        <li>ℹ️ Hakkında (proje bilgileri)</li>
+    </ul>
+    <p>Pencereleri sürükleyebilir, boyutlandırabilir ve kapatabilirsiniz.</p>
+    <button onclick="kapatMerhabaSayfasi()">Devam Et</button>
+</div>
+
+<div class="start-menu" id="startMenu">
+    <button onclick="openApp('browserWindow')">🌐 İnternet Tarayıcı</button>
+    <button onclick="openApp('solitaireWindow')">🃏 Solitaire</button>
+    <button onclick="openApp('calculatorWindow')">🧮 Hesap Makinesi</button>
+    <button onclick="openApp('textEditorWindow')">📄 Metin Editörü</button>
+    <button onclick="openApp('snakeGameWindow')">🐍 Yılan Oyunu</button>
+    <button onclick="openApp('shakespeareWindow')">🎭 Shakespeare Sözleri<button>
+    <button onclick="openApp('trailerWindow')">🎬 Fragman</button>
+    <button onclick="openApp('aboutWindow')">ℹ️ Hakkında</button>
+</div>
+
+<div class="taskbar">
+    <button class="start-button" onclick="toggleStartMenu()">Başlat</button>
+    <span>BitOS Terminal XP</span>
+    <span id="clock"></span>
+</div>
+
+<footer>created by jobless x KARİZ(MA) by GKMations</footer>
+
+<div class="bitos-window" id="browserWindow" style="display:none;" onclick="startDrag(event, this)">
+    <div class="title-bar">
+        🌐 Tarayıcı
+        <div class="window-buttons">
+            <button onclick="resizeWindow('browserWindow', -50)">−</button>
+            <button onclick="resizeWindow('browserWindow', 50)">+</button>
+            <button onclick="closeApp('browserWindow')">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <input id="urlInput" placeholder="Google araması veya URL" style="width: 80%;">
+        <button onclick="openGoogleSearch()">Git</button>
+        <iframe id="browserFrame" src="about:blank"></iframe>
+    </div>
+</div>
+
+<div class="bitos-window" id="calculatorWindow" style="display:none;" onclick="startDrag(event, this)">
+    <div class="title-bar">
+        🧮 Hesap Makinesi
+        <div class="window-buttons">
+            <button onclick="resizeWindow('calculatorWindow', -50)">−</button>
+            <button onclick="resizeWindow('calculatorWindow', 50)">+</button>
+            <button onclick="closeApp('calculatorWindow')">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <input type="text" id="calc" readonly style="width: 100%; font-size: 18px; text-align: right;">
+        <div>
+            <button onclick="addCalc('1')">1</button>
+            <button onclick="addCalc('2')">2</button>
+            <button onclick="addCalc('3')">3</button>
+            <button onclick="addCalc('+')">+</button>
+            <button onclick="addCalc('4')">4</button>
+            <button onclick="addCalc('5')">5</button>
+            <button onclick="addCalc('6')">6</button>
+            <button onclick="addCalc('-')">-</button><br>
+            <button onclick="addCalc('7')">7</button>
+            <button onclick="addCalc('8')">8</button>
+            <button onclick="addCalc('9')">9</button>
+            <button onclick="addCalc('*')">*</button><br>
+            <button onclick="addCalc('0')">0</button>
+            <button onclick="addCalc('.')">.</button>
+            <button onclick="calcResult()">=</button>
+            <button onclick="addCalc('/')">/</button><br>
+            <button onclick="clearCalc()">C</button>
+        </div>
+    </div>
+</div>
+<div class="bitos-window" id="solitaireWindow" style="display:none;" onclick="startDrag(event, this)">
+    <div class="title-bar">
+        🃏 Solitaire
+        <div class="window-buttons">
+            <button onclick="resizeWindow('solitaireWindow', -50)">−</button>
+            <button onclick="resizeWindow('solitaireWindow', 50)">+</button>
+            <button onclick="closeApp('solitaireWindow')">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <iframe src="https://solitaires-online.com" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+</div>
+<div class="bitos-window" id="textEditorWindow" style="display:none;" onclick="startDrag(event, this)">
+    <div class="title-bar">
+        📄 Metin Editörü
+        <div class="window-buttons">
+            <button onclick="resizeWindow('textEditorWindow', -50)">−</button>
+            <button onclick="resizeWindow('textEditorWindow', 50)">+</button>
+            <button onclick="closeApp('textEditorWindow')">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <textarea id="textArea" style="width:100%; height:150px; background:#000; color:#0f0;"></textarea>
+        <button onclick="downloadText()">İndir</button>
+        <input type="file" id="fileInput" onchange="uploadText()" />
+    </div>
+</div>
+<div class="bitos-window" id="trailerWindow" style="display:none;" onclick="startDrag(event, this)">
+    <div class="title-bar">
+        🎬 Fragman
+        <div class="window-buttons">
+            <button onclick="resizeWindow('trailerWindow', -50)">−</button>
+            <button onclick="resizeWindow('trailerWindow', 50)">+</button>
+            <button onclick="closeApp('trailerWindow')">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bT-2mzMh_CI?si=AMeaMPzFQnCfelT-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+</div>
+<div class="bitos-window" id="snakeGameWindow" style="display:none;" onclick="startDrag(event, this)">
+    <div class="title-bar">
+        🐍 Yılan Oyunu
+        <div class="window-buttons">
+            <button onclick="resizeWindow('snakeGameWindow', -50)">−</button>
+            <button onclick="resizeWindow('snakeGameWindow', 50)">+</button>
+            <button onclick="closeApp('snakeGameWindow')">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+ <iframe src="https://solitaires-online.com/snake/#id=45458qqtjo,no-article,no-nav,no-ads,no-feedback,dark-modemark=Jobless." title="Snake game" width="100%" height="100%" style="border: none;"></iframe>
+    </div>
+</div>
+
+<div class="bitos-window" id="shakespeareWindow" style="display:none;" onclick="startDrag(event, this)">
+    <div class="title-bar">
+        🎭 Shakespeare Sözleri
+        <div class="window-buttons">
+            <button onclick="resizeWindow('shakespeareWindow', -50)">−</button>
+            <button onclick="resizeWindow('shakespeareWindow', 50)">+</button>
+            <button onclick="closeApp('shakespeareWindow')">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <p id="quote">"To be, or not to be, that is the question."</p>
+        <button onclick="newQuote()">Yeni Söz</button>
+    </div>
+</div>
+
+<div class="bitos-window" id="aboutWindow" style="display:none;" onclick="startDrag(event, this)">
+    <div class="title-bar">
+        ℹ️ Hakkında
+        <div class="window-buttons">
+            <button onclick="resizeWindow('aboutWindow', -50)">−</button>
+            <button onclick="resizeWindow('aboutWindow', 50)">+</button>
+            <button onclick="closeApp('aboutWindow')">×</button>
+        </div>
+    </div>
+    <div class="window-content">
+        <p>created by jobless x KARİZ(MA) by GKMations</p>
+    </div>
+</div>
+
+<script>
+    let offsetX, offsetY, activeWindow;
+    let topZ = 10;
+
+    function startDrag(e, element) {
+        activeWindow = element;
+        bringToFront(activeWindow);
+        if (e.type === 'touchstart') {
+            offsetX = e.touches[0].clientX - activeWindow.offsetLeft;
+            offsetY = e.touches[0].clientY - activeWindow.offsetTop;
+        } else {
+            offsetX = e.clientX - activeWindow.offsetLeft;
+            offsetY = e.clientY - activeWindow.offsetTop;
+        }
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('touchend', endDrag);
+    }
+
+    function drag(e) {
+        if (activeWindow) {
+            if (e.type === 'touchmove') {
+                activeWindow.style.left = (e.touches[0].clientX - offsetX) + "px";
+                activeWindow.style.top = (e.touches[0].clientY - offsetY) + "px";
+            } else {
+                activeWindow.style.left = (e.clientX - offsetX) + "px";
+                activeWindow.style.top = (e.clientY - offsetY) + "px";
+            }
+        }
+    }
+
+    function endDrag() {
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('touchend', endDrag);
+        activeWindow = null;
+    }
+
+    function bringToFront(el) {
+        topZ++;
+        el.style.zIndex = topZ;
+    }
+
+    function toggleStartMenu() {
+        const menu = document.getElementById("startMenu");
+        menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+
+    function openApp(id) {
+        const el = document.getElementById(id);
+        el.style.display = "block";
+        bringToFront(el);
+        if (id === 'snakeGameWindow') {
+            // iframe olduğu için özel bir başlatma gerekmiyor
+        }
+    }
+
+    function closeApp(id) {
+        document.getElementById(id).style.display = "none";
+        if (id === 'snakeGameWindow') {
+            // iframe olduğu için özel bir temizleme gerekmiyor
+        }
+    }
+
+    function addCalc(val) {
+        document.getElementById("calc").value += val;
+    }
+
+    function clearCalc() {
+        document.getElementById("calc").value = "";
+    }
+
+    function calcResult() {
+        try {
+            document.getElementById("calc").value = eval(document.getElementById("calc").value);
+        } catch {
+            document.getElementById("calc").value = "Hata";
+        }
+    }
+
+    function openGoogleSearch() {
+        const query = document.getElementById('urlInput').value;
+        const frame = document.getElementById('browserFrame');
+        if (query.startsWith("http")) {
+            frame.src = query;
+        } else {
+            frame.src = 'https://www.bing.com/search?q=' + encodeURIComponent(query);
+        }
+    }
+
+    const quotes = [
+        `"To be, or not to be, that is the question."`,
+        `"All that glitters is not gold."`,
+        `"Brevity is the soul of wit."`,
+        `"Some are born great, some achieve greatness..."`,
+        `"Love all, trust a few, do wrong to none."`
+    ];
+
+    function newQuote() {
+        const index = Math.floor(Math.random() * quotes.length);
+        document.getElementById('quote').innerText = quotes[index];
+    }
+
+    function resizeWindow(id, delta) {
+        const win = document.getElementById(id);
+        win.style.width = (win.offsetWidth + delta) + 'px';
+        win.style.height = (win.offsetHeight + delta) + 'px';
+    }
+
+    function downloadText() {
+        const text = document.getElementById("textArea").value;
+        const blob = new Blob([text], { type: 'text/plain' });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "metin.txt";
+        a.click();
+    }
+
+    function uploadText() {
+        const file = document.getElementById("fileInput").files[0];
+if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("textArea").value = e.target.result;
+        };
+        reader.readAsText(file);
+    }
+
+    // Saat
+    function updateClock() {
+        const now = new Date();
+        document.getElementById("clock").textContent = now.toLocaleTimeString('tr-TR');
+    }
+    setInterval(updateClock, 1000);
+
+    // Tüm pencerelere dokunma olay dinleyicilerini ekle
+    document.querySelectorAll('.bitos-window').forEach(window => {
+        window.addEventListener('touchstart', (e) => startDrag(e, window));
+    });
+
+    function kapatMerhabaSayfasi() {
+        document.getElementById("merhabaSayfasi").style.display = "none";
+    }
+
+    // Sayfa yüklendiğinde merhaba sayfası görünür.
+</script>
+
+</body>
+</html>
